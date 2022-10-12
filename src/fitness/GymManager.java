@@ -2,6 +2,7 @@ package fitness;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -104,6 +105,10 @@ public class GymManager {
         for(int i = 0; st.hasMoreTokens(); i++){
             temp[i]= st.nextToken();
         }
+        if(temp[4] == null){
+            temp[4] = temp[3];
+            temp[3] = null;
+        }
             //but the date is our date right like october ?
         return temp;
     }
@@ -115,9 +120,15 @@ public class GymManager {
      */
     private Member createMember(String [] temp){
         Date dobtemp =  new Date(temp[2]);
-        if(temp[3] == null) {
+        /*if(temp[3] == null) {
             temp[3] = "12/12/2028";
             Member tempMember = new Member(temp[0], temp[1], new Date(temp[2]), new Date(temp[3]),Location.NOVALUE);
+            return tempMember;
+        }*/
+        if(temp[3] == null){
+            Date threeMonth = DATE_CALL.threeMonthsDate();
+            Member tempMember = new Member(temp[0], temp[1], dobtemp, threeMonth, Location.valueOf(temp[4].toUpperCase()));
+            //System.out.println(threeMonth.print(threeMonth));
             return tempMember;
         }
         Date expiretemp = new Date(temp[3]);
@@ -153,6 +164,13 @@ public class GymManager {
         }
         return fitnessMember;
     }
+
+
+    /*
+    Call CG
+    - Use find fucntion in Member Database and then use who am I.
+
+     */
 
 
     /**
@@ -356,7 +374,6 @@ Questions :
     -
     Member
     - MemberShip Fee she wants inputted (yearly) ?
-
 
  */
 

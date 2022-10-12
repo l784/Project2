@@ -115,8 +115,20 @@ public class Member implements Comparable<Member>{
     }
 
     /**
+    public static void main(String [] args){
+        Date d1= new Date(2002, 8, 07);
+        Date e1 = new Date(2027, 12, 28);
+        Date d2 = new Date(2002, 10, 28);
+        Date e2 = new Date(2027, 12, 28);
+        Member m1 = new Member("Leah", "Ranavat",d1,e1,PISCATAWAY);
+        Member m2 = new Member("Tanvi", "Thigle",d2,e2, BRIDGEWATER);
+        Family f1 = new Family("Leah", "Ranavat", d1, d2, BRIDGEWATER);
+        System.out.println(f1);
+        System.out.println(m1.compareTo(f1));
+    }
+
      Testbed main to check the compareTo() method.
-     */
+
     public static void main (String [] args){
         Date d1= new Date(2002, 8, 07);
         Date e1 = new Date(2027, 12, 28);
@@ -149,9 +161,8 @@ public class Member implements Comparable<Member>{
 
     }
 
-    /**
+
      Helper to the testbed main.
-     */
     private static void testResult(Member m1, Member m2, int expectedOutput, int actualOutput){
         System.out.println(m1.toString());
         System.out.println(m2.toString());
@@ -160,6 +171,6 @@ public class Member implements Comparable<Member>{
             System.out.println(", PASS.\n");
         else
             System.out.println(", FAIL.\n");
-    }
+    }*/
 
 }

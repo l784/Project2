@@ -2,6 +2,8 @@ package fitness;
 
 public class Premium extends Family{
 
+   public int GUEST_PASS;
+
    /**
     * Constructor creates an instance of a member given all the attributes
     *
@@ -13,6 +15,7 @@ public class Premium extends Family{
     */
    public Premium(String fname, String lname, Date dob, Date expire, Location location) {
       super(fname, lname, dob, expire, location);
+      this.GUEST_PASS = 3;
    }
 
    @Override
