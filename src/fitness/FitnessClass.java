@@ -1,5 +1,6 @@
 package fitness;
 import java.util.StringTokenizer;
+import java.util.ArrayList;
 
 /**
  Fitness class provides all the instances of different classes present.
@@ -8,171 +9,201 @@ import java.util.StringTokenizer;
  */
 public class FitnessClass {
     private Time time;
-    private String instructor;
-    public static final String [] fitness_class_list
-            = {"Pilates","Spinning", "Cardio"};
-    Member [] pilates_participants = new Member[100];
-    Member [] spinning_participants = new Member[100];
-    Member [] cardio_participants = new Member[100];
+    private Instructor instructor;//unique
+
+    private Location location;//unique
+    private String type;//unique
+
+    private ArrayList <Member> participants = new ArrayList<>();
+    private ArrayList <Member> guests = new ArrayList<>();
+
 
     /**
      Constructor makes instances of classes and assigns time and instructors
-     @param fitness_class that the member wants
+     @param type, @param ins, @param loc, @param time, that the member wants
      */
-    public FitnessClass(String fitness_class){
-        if(fitness_class.equals("Pilates")){
-            this.time = Time.MORNING;
-            this.instructor = "Jennifer";
-        }
-        if(fitness_class.equals("Cardio")) {
-            this.time = Time.AFTERNOON;
-            this.instructor = "Kim";
-        }
-        if(fitness_class.equals("Spinning")) {
-            this.time = Time.AFTERNOON;
-            this.instructor = "Denise";
-        }
+    public FitnessClass(String type, Instructor ins, Time time,Location loc){
+        this.type = type;
+        this.instructor = ins;
+        this.location = loc;
+        this. time = time;
     }
+    /**
+     Gets class type
+     @return String type
+     */
+    public String getClassType(){
+        return this.type;
+    }
+
+    /**
+     Gets class location
+     @return Location location
+     */
+    public Location getClassLocation(){
+        return this.location;
+    }
+
+    /**
+     Gets class instructor
+     @return Instructor instructor
+     */
+    public Instructor getInstructor(){
+        return this.instructor;
+    }
+
+    /**
+     Gets class time
+     @return Time time
+     */
+    public Time getClassTime(){
+        return this.time;
+    }
+
+    public ArrayList getParticipants(){
+        return this.participants;
+    }
+
+    /**
+     Checks if a fitness class is the same as another.
+     A fitness class is uniquely identified by type, instructor, and location.
+     @param obj the object to be checked
+     @return true if the same false if different
+     */
+    @Override
+    public boolean equals(Object obj){
+        if(obj instanceof FitnessClass){
+            FitnessClass testClass = (FitnessClass) obj; //casting
+            return ((testClass.type.equalsIgnoreCase(this.type)) && (testClass.location.equals(this.location)) && (testClass.instructor.equals(this.instructor)));
+        }
+        return false;
+    }
+
 
     /**
      Checks in participants if they meet all the criteria
      @param member member that needs to check in
-     @param fit_class the class to be added too
      @return true if member checked in, false if not
      */
-    public boolean checkIn(Member member, String fit_class){
-            if(member.getDob().dobIsValid(member.getDob())){
-                if(member.getExpire().expIsValid(member.getExpire())){
-                    if(classExists(fit_class) > -1){
-                        if(alreadyCheckedIn(member, fit_class) == false){
-                            if(timeConflict(member, fit_class)==false){
-                                return addParticipant(member, fit_class);
-                            }
-                        }
+    public boolean checkIn(Member member){
+        if(member.getDob().dobIsValid(member.getDob())){
+
+            if(member.getExpire().expIsValid(member.getExpire())){
+                //System.out.println(member.getLocation() + " " + this.location);
+                if(member instanceof Member && member.getLocation().equals(this.location)){
+                    //System.out.println(member.getLocation() + " " + this.location);
+                    //if(alreadyCheckedIn(member) == false){
+                        //System.out.println(participants.size());
+                        //System.out.println("Are we ever reaching here ?");
+                        return participants.add(member);
+                    //}
+                }
+
+                else if(member instanceof Family || member instanceof Premium){
+                    if(alreadyCheckedIn(member) == false){
+                        return participants.add(member);
                     }
                 }
+
+
+                //put in schedule?
+
             }
+        }
+        return false;
+    }
+
+
+    /**
+     Checks in guests if they meet all the criteria
+     @param member member that needs to check in
+     @return true if guest checked in, false if not
+     */
+    public boolean guestCheckIn(Member member){
+        if(member.getDob().dobIsValid(member.getDob())){
+            if(member.getExpire().expIsValid(member.getExpire())){
+                //put in schedule?
+                return addGuest(member);
+            }
+        }
         return false;
     }
 
     /**
-     Adds in participants in the respective class list
+     Adds in guests in the respective list
      @param member the member that needs to be added
-     @param fitness_class the fitness class to add the member
-     @return true if member added in, false if not
+     @return true if guest added in, false if not
      */
-    public boolean addParticipant(Member member, String fitness_class){
-        if( fitness_class.equals("Pilates") ){
-            if( pilates_participants[0] == null ){
-                pilates_participants[0] = member;
-                return true;
-            }
-            for( int i = 0; i < pilates_participants.length; i++ ){
-                int j = i + 1;
-                if( pilates_participants[i] != null && pilates_participants[j] == null ){
-                    pilates_participants[j] = member;
-                    return true;
-                }
-            }
+    public boolean addGuest(Member member){
+        System.out.println(member.whoAmI());
+        int a;
+        int b;
+        //System.out.println( (Family) member.);
+        if(member.whoAmI().equals("Family.") && ((Family) member).GUEST_PASS > 0){
+            b = ((Family) member).getGUEST_PASS();
+            System.out.println("Does it enter here");
+            System.out.println(b);
+            guests.add(member);
+            ((Family) member).setGUEST_PASS(b-1);
+            System.out.println(b);
+            return true;
         }
-        if( fitness_class.equals("Spinning") ){
-            if( spinning_participants[0] == null ) {
-                spinning_participants[0] = member;
-                return true;
-            }
-            for( int i = 0; i < spinning_participants.length; i++ ){
-                int j = i + 1;
-                if( spinning_participants[i] != null && spinning_participants[j] == null ){
-                    spinning_participants[j] = member;
-                    return true;
-                }
-            }
-        }
-        if( fitness_class.equals("Cardio") ){
-            if( cardio_participants[0] == null ){
-                cardio_participants[0] = member;
-                return true;
-            }
-            for( int i = 0; i < cardio_participants.length; i++ ){
-                int j = i + 1;
-                if( cardio_participants[i] !=null && cardio_participants[j] == null ){ cardio_participants[j] = member;
-                    return true;
-                }
-            }
+        else if (member.whoAmI().equals("Premium.") && ((Premium) member).GUEST_PASS > 0){
+            a = ((Premium) member).getGUEST_PASS();
+            System.out.println("Does it enter here");
+            System.out.println(a);
+            guests.add(member);
+            System.out.println(a);
+            ((Premium) member).setGUEST_PASS(a-1);
+            return true;
         }
         return false;
     }
 
-    /**
-     Checks if class exists at the Gym
-     @param fit_class to check with existing classes
-     @return int -1 if class does not exist, index value if it does
-     */
-    public int classExists(String fit_class){
-        for( int i = 0; i < fitness_class_list.length; i++ ){
-            if( fitness_class_list[i].equals(fit_class) )
-                return i;
-        }
-        return -1;
-    }
-
-    /**
-     Checks if there is a time conflict for participants to attend classes
-     @param member the member to be checked
-     @param fit_class the class the member is in
-     @return true if there is a time conflict, false if there is not.
-     */
-    public boolean timeConflict(Member member, String fit_class){ // USE TIME!!
-        if( fit_class.equals("Cardio") && alreadyCheckedIn(member, "Spinning") )
-            return true;
-        if( fit_class.equals("Spinning") && alreadyCheckedIn(member, "Cardio") )
-            return true;
-        return false;
-    }
 
     /**
      Checks if member has already checked into a class they are trying to check into again
      @param member the member to check
-     @param fitness_class the class checked into
      @return true if already checked in, false if not.
      */
-    public boolean alreadyCheckedIn(Member member, String fitness_class){
-        if(fitness_class.equals("Cardio")){
-            if(cardio_participants[0] == null){
-                return false;
-            }
-            for(int i =0; i< cardio_participants.length; i++){
-                if(cardio_participants[i]!= null) {
-                    if (cardio_participants[i].equals(member)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        if(fitness_class.equals("Spinning")){
-            if(spinning_participants[0] == null){
-                return false;
-            }
-            for( int i =0; i< spinning_participants.length; i++ ){
-                if( spinning_participants[i]!= null ) {
-                    if ( spinning_participants[i].equals(member) ) {
-                        return true;
-                    }
-                }
-            }
-        }
-        if( fitness_class.equals("Pilates") ){
-            if( pilates_participants[0] == null ){
-                return false;
-            }
-            for(int i =0; i< pilates_participants.length; i++){
-                if(pilates_participants[i]!= null){
-                    if(pilates_participants[i].equals(member)){
-                        return true;
-                    }
-                }
+    public boolean alreadyCheckedIn(Member member){
+        for(int i = 0; i < participants.size(); i++){
 
+            //System.out.println(participants.get(i));
+
+            if(participants.get(i)!= null) {
+                //System.out.println("Goes in here!!");
+
+                if (participants.get(i).equals(member)) {
+                    //System.out.println(participants.get(i));
+                    return true;
+                }
             }
+        }
+
+        return false;
+    }
+
+    public FitnessClass TimeConflict(){
+        return this;
+    }
+
+
+    /**
+     Removes member from participants list
+     @param member the member to be dropped
+     @return true if drop is successful, false if not.
+     */
+    public boolean doneClass(Member member){ //exists in fit_class array then remove
+        if(alreadyCheckedIn(member)){
+
+            for(int i =0; i <participants.size() ; i++){
+                if(member.equals(participants.get(i))){
+                    participants.remove(i);
+                    return true;
+                }
+            }
+
         }
         return false;
     }
@@ -180,84 +211,71 @@ public class FitnessClass {
     /**
      Removes member from participants list
      @param member the member to be dropped
-     @param fit_class the class to be dropped from
      @return true if drop is successful, false if not.
      */
-    public boolean dropClass(Member member, String fit_class){ //exists in fit_class array then remove
-        if(alreadyCheckedIn(member, fit_class)){
+    public boolean guestDoneClass(Member member){ //exists in fit_class array then remove
 
-            if(fit_class.equals("Cardio")){
-                for(int i =0; i <cardio_participants.length ; i++){
-                    int j = i+1;
-                    if(member.equals(cardio_participants[i])){
-                        while(j<cardio_participants.length) {
-                            cardio_participants[j - 1] = cardio_participants[j];
-                            j++;
-                        }
-                        return true;
-                    }
+        for (int i = 0; i < guests.size(); i++) {
+            if (member.equals(guests.get(i))) {
+                guests.remove(i);
+                if(member.whoAmI().equals("Premium")){
+                    ((Premium)member).setGUEST_PASS(((Premium)member).getGUEST_PASS()+1);
                 }
-            }
-            if(fit_class.equals("Spinning")){
-                for(int i =0; i <spinning_participants.length ; i++){
-                    int j = i+1;
-                    if(member.equals(spinning_participants[i])){
-                        while(j<spinning_participants.length) {
-                            spinning_participants[j - 1] = spinning_participants[j];
-                            j++;
-                        }
-                        return true;
-                    }
+                else {
+                    ((Family)member).setGUEST_PASS(((Family)member).getGUEST_PASS()+1);
                 }
-            }
-            if(fit_class.equals("Pilates")){
-                for(int i =0; i <pilates_participants.length ; i++){
-                    int j = i+1;
-                    if(member.equals(pilates_participants[i])){
-                        while(j<pilates_participants.length) {
-                            pilates_participants[j - 1] = pilates_participants[j];
-                            j++;
-                        }
-                        return true;
-                    }
-                }
+                return true;
             }
         }
+
         return false;
     }
 
+
+
     /**
-     Prints the schedule of all fitness classes
+     Prints all the information of the member
+     @return String member
      */
-    public void printSchedule(){
-        System .out.println("\n-Fitness classes-");
-        System .out.println("Pilates — JENNIFER 9:30");
-        if(pilates_participants[0] != null){
-            System.out.println("\t ** participants **");
-        }
-        for(int i =0; i< pilates_participants.length; i++){
-            if(pilates_participants[i]!=null){
-                System.out.println("\t\t" + pilates_participants[i].getFname() + " " + pilates_participants[i].getLname() + ", " + "DOB:" + pilates_participants[i].getDob().print(pilates_participants[i].getDob()) + ", " + "Membership expires " + pilates_participants[i].getExpire().print(pilates_participants[i].getExpire()) + ", " + "Location: " + pilates_participants[i].getLocation() + ", " + pilates_participants[i].getLocation().getZipcode() + ", " + pilates_participants[i].getLocation().getCounty().toUpperCase());
+    @Override
+    public String toString(){
+        String std = type + " - " + instructor + ", " + time.getHour() + ", " + location;
+        String p = "\n Participants ";
+        String g = "\n Guests ";
+        //System.out.println("Participants");
+        for(int i=0; i< participants.size(); i++){
+            if(participants.get(i)!= null){
+                p += "\n" + participants.get(i);
+
             }
         }
-        System .out.println("Spinning — DENISE 14:00");
-        if(spinning_participants[0] != null){
-            System.out.println("\t ** participants **");
-        }
-        for(int i =0; i< spinning_participants.length; i++){
-            if(spinning_participants[i]!=null){
-                System.out.println("\t\t" + spinning_participants[i].getFname() + " " + spinning_participants[i].getLname() + ", " + "DOB:" + spinning_participants[i].getDob().print(spinning_participants[i].getDob()) + ", " + "Membership expires " + spinning_participants[i].getExpire().print(spinning_participants[i].getExpire()) + ", " + "Location: " + spinning_participants[i].getLocation() + ", " + spinning_participants[i].getLocation().getZipcode() + ", " + spinning_participants[i].getLocation().getCounty().toUpperCase());
+        for(int i=0; i< guests.size(); i++){
+            if(guests.get(i)!= null){
+                g += "\n" + guests.get(i);
+
             }
         }
-        System .out.println("Cardio — KIM 14:00");
-        if(cardio_participants[0] != null){
-            System.out.println("\t ** participants **");
-        }
-        for(int i =0; i< cardio_participants.length; i++){
-            if(cardio_participants[i]!=null){
-                System.out.println("\t\t" + cardio_participants[i].getFname() + " " + cardio_participants[i].getLname() + ", " + "DOB:" + cardio_participants[i].getDob().print(cardio_participants[i].getDob()) + ", " + "Membership expires " + cardio_participants[i].getExpire().print(cardio_participants[i].getExpire()) + ", " + "Location: " + cardio_participants[i].getLocation() + ", " + cardio_participants[i].getLocation().getZipcode() + ", " + cardio_participants[i].getLocation().getCounty().toUpperCase());
-            }
-        }
-        System.out.println("\n");
+        String res = std;
+        if(participants.size()>0)
+            res += p;
+        if(guests.size()>0)
+            res += g;
+        return res;
+
     }
+
+    /*FitnessClass x = new FitnessClass(Pilates, KIM, MORNING, FRANKLIN);
+    FitnessClass y = new FitnessClass(Pilates, KIM, MORNING, FRANKLIN);
+
+    x.getTime()
+    y.getTime()
+
+    participantsX = x.getParticipants()
+    participantsY = y
+
+    for i in x.getParticipants{
+        if is in y.getParticipants {
+
+        }
+    }*/
 }

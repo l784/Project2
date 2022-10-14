@@ -87,6 +87,17 @@ public class Date implements Comparable<Date>{
         year = rightNow.get(Calendar.YEAR);
     }
 
+    public Date threeMonthsDate(){
+        Calendar rightNow = Calendar.getInstance();
+        Calendar threemonths = rightNow;
+        rightNow.add(Calendar.MONTH,4);
+        day = threemonths.get(Calendar.DAY_OF_MONTH);
+        month = rightNow.get(Calendar.MONTH);
+        year = rightNow.get(Calendar.YEAR) ;
+        Date temp = new Date(year,day,month);
+        return temp;
+    }
+
     /**
      Constructor makes a new date instance
      Turns string date into int
@@ -213,7 +224,8 @@ public class Date implements Comparable<Date>{
     }
 
     public static void main (String [] args){
-        Date date = new Date("11/21/800");
+        Date date = new Date();
+        System.out.println(date.print(date.threeMonthsDate()));
     }
     /**
     /** Testbed main to exercise the isValid method. ...

@@ -65,7 +65,7 @@ public class Member implements Comparable<Member>{
         return this.location;
     }
 
-    public String whoAmI() { return "I am a Member."; }
+    public String whoAmI() { return "Member."; }
 
     /**
      Prints all the information of the member

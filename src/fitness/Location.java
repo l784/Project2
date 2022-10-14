@@ -52,8 +52,10 @@ public enum Location {
     public boolean isValid(String location){
         Location [] locArr = Location.values();
         for(int i = 0; i < locArr.length;i++){
-            if (location.toUpperCase().equals(locArr[i].toString())){
-                return true;
+            if(location != null){
+                if (location.toUpperCase().equals(locArr[i].toString())){
+                    return true;
+                }
             }
         }
         return false;

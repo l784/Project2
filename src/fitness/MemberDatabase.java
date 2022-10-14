@@ -162,7 +162,7 @@ public class MemberDatabase {
         Member temp = new Member("", "", null, null, null);
         for (int i = 0; i < size; i++) {
             for (int j = i + 1; j < size; j++) {
-                if(mlist[i] != null) {
+                if(mlist[i] != null && mlist[j] != null) {
                     if (mlist[i].getLocation().locCompareTo(mlist[j].getLocation()) > 0) {
                         temp = mlist[i];
                         mlist[i] = mlist[j];
@@ -229,7 +229,7 @@ public class MemberDatabase {
         Member temp3 = new Member("", "", null, null, null);
         for (int i = 0; i < size; i++) {
             for (int j = i + 1; j < size; j++) {
-               if(mlist[i] != null) {
+               if(mlist[i] != null && mlist[j] != null)  {
                    if (mlist[i].compareTo(mlist[j]) > 0) {
                        temp3 = mlist[i];
                        mlist[i] = mlist[j];
@@ -240,14 +240,16 @@ public class MemberDatabase {
         }
         System.out.println("\n-list of members sorted by last name, and first name-");
         for (int i = 0; i < size; i++) {
-            System.out.println(mlist[i].getFname() + " "
-                    + mlist[i].getLname() + ", " +  "DOB: "
-                    + mlist[i].getDob().print(mlist[i].getDob())
-                    + ", " + "Membership expires "
-                    + mlist[i].getExpire().print(mlist[i].getExpire())
-                    + "," + " Location: " + mlist[i].getLocation()
-                    + ", " + mlist[i].getLocation().getZipcode()
-                    + ", " + mlist[i].getLocation().getCounty().toUpperCase());
+            if(mlist[i] != null){
+                System.out.println(mlist[i].getFname() + " "
+                        + mlist[i].getLname() + ", " +  "DOB: "
+                        + mlist[i].getDob().print(mlist[i].getDob())
+                        + ", " + "Membership expires "
+                        + mlist[i].getExpire().print(mlist[i].getExpire())
+                        + "," + " Location: " + mlist[i].getLocation()
+                        + ", " + mlist[i].getLocation().getZipcode()
+                        + ", " + mlist[i].getLocation().getCounty().toUpperCase());
+            }
         }
         System.out.println("-end of list-" + "\n");
     }
