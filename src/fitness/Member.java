@@ -12,10 +12,19 @@ public class Member implements Comparable<Member>{
     private Date dob;
     private Date expire;
     private Location location;
+    public static final double INITIAL = 29.99;
+    public static final double MONTHLY = 39.99;
+    public static final double MONTHLY_P = 59.99;
+    public static final double QUARTERLY = 3;
+    public static final double YEARlY = 11;
 
     /**
      Constructor creates an instance of a member given all the attributes
-     @param fname, lname, dob, expire, location
+     * @param fname first name of member
+     * @param lname last name of member
+     * @param dob date of birth of member
+     * @param expire expiration date of member
+     * @param location location of member
      */
     public Member (String fname, String lname, Date dob, Date expire, Location location){
         this.fname = fname;
@@ -59,12 +68,16 @@ public class Member implements Comparable<Member>{
 
     /**
      Gets gym location of member
-     @return Location location
+     @return Location
      */
     public Location getLocation(){
         return this.location;
     }
 
+    /**
+     Returns whether Member, Family or Premium
+     @return String the identifier of Member
+     */
     public String whoAmI() { return "Member."; }
 
     /**
@@ -109,26 +122,18 @@ public class Member implements Comparable<Member>{
         return -1;
     }
 
-    public double membershipFee() {
-       //How to do annually and per month???
-        return 29.99 + (39.99*3);
-    }
-
     /**
-    public static void main(String [] args){
-        Date d1= new Date(2002, 8, 07);
-        Date e1 = new Date(2027, 12, 28);
-        Date d2 = new Date(2002, 10, 28);
-        Date e2 = new Date(2027, 12, 28);
-        Member m1 = new Member("Leah", "Ranavat",d1,e1,PISCATAWAY);
-        Member m2 = new Member("Tanvi", "Thigle",d2,e2, BRIDGEWATER);
-        Family f1 = new Family("Leah", "Ranavat", d1, d2, BRIDGEWATER);
-        System.out.println(f1);
-        System.out.println(m1.compareTo(f1));
+     The Membership Fee for Member Type
+     @return double the dollar amount of membershipFee
+     */
+    public double membershipFee() {
+        return INITIAL + (MONTHLY* QUARTERLY);
     }
 
-     Testbed main to check the compareTo() method.
 
+    /**Testbed main to check the compareTo() method.
+     * @param args
+     */
     public static void main (String [] args){
         Date d1= new Date(2002, 8, 07);
         Date e1 = new Date(2027, 12, 28);
@@ -162,7 +167,9 @@ public class Member implements Comparable<Member>{
     }
 
 
+    /**
      Helper to the testbed main.
+     */
     private static void testResult(Member m1, Member m2, int expectedOutput, int actualOutput){
         System.out.println(m1.toString());
         System.out.println(m2.toString());
@@ -171,6 +178,6 @@ public class Member implements Comparable<Member>{
             System.out.println(", PASS.\n");
         else
             System.out.println(", FAIL.\n");
-    }*/
+    }
 
 }

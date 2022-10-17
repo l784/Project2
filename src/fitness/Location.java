@@ -3,7 +3,7 @@ package fitness;
 /**
  Enum Class Location with zipCode and County of the 5 Gym Chain Locations
  Includes a constructor,getter, isValid and CompareTo method
- @author Leah, Tanvi
+ @author Leah Ranavat, Tanvi Thigle
  */
 public enum Location {
     BRIDGEWATER("08807", "Somerset"),

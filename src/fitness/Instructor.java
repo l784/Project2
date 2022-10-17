@@ -1,5 +1,8 @@
 package fitness;
 
+/**
+ * Instructor names for all the classes
+ */
 public enum Instructor {
     JENNIFER,
     KIM,
@@ -8,10 +11,10 @@ public enum Instructor {
     EMMA;
 
     /**
-     Checks if the given location is valid
-     Creates a Location type from String
+     Checks if the given instructor is valid
+     Creates a instructor type from String
      @param instructor the instructor that needs to be checked
-     @return true if the location isValid, false otherwise
+     @return true if the instructor isValid, false otherwise
      */
     public boolean isValid(String instructor){
         Instructor [] instArr = Instructor.values();

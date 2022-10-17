@@ -87,6 +87,10 @@ public class Date implements Comparable<Date>{
         year = rightNow.get(Calendar.YEAR);
     }
 
+    /**
+     * Creates a Date expiration of 3 months from now
+     * @return Date the expiration 3 months from today
+     */
     public Date threeMonthsDate(){
         Calendar rightNow = Calendar.getInstance();
         Calendar threemonths = rightNow;
@@ -223,12 +227,10 @@ public class Date implements Comparable<Date>{
         return date.getMonth()+ "/" + date.getDay() + "/" + date.getYear();
     }
 
-    public static void main (String [] args){
-        Date date = new Date();
-        System.out.println(date.print(date.threeMonthsDate()));
-    }
-    /**
+
     /** Testbed main to exercise the isValid method. ...
+     * @param args
+     */
     public static void main (String [] args) {
         Date date = new Date("11/21/800");
 
@@ -263,7 +265,7 @@ public class Date implements Comparable<Date>{
      @param date the date of the member
      @param expectedOutput the correct/expected output
      @param actualOutput the output of the program
-
+     */
     private static void testResult(Date date, boolean expectedOutput, boolean actualOutput){
         System.out.println(date.print(date));
         System.out.println("isValid() returns " + actualOutput);
@@ -272,6 +274,5 @@ public class Date implements Comparable<Date>{
         else
             System.out.println(", FAIL.\n");
     }
-    */
 
 }

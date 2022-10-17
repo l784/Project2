@@ -10,20 +10,6 @@ public class MemberDatabase {
     private int size;
     public static final int NOTFOUND = -1;
 
-    /*
-    public MemberDatabase(){
-        this.mlist = getMlist();
-        this.size = getSize();
-    }*/
-
-    public Member [] getMlist(){
-        //System.out.println(getMlist());
-        /*for(int i = 0; i < size; i ++){
-            System.out.println(getMlist()[i]);
-        }*/
-        return this.mlist;
-
-    }
     /**
     Getter method for size
     @return size of mlist
@@ -44,16 +30,6 @@ public class MemberDatabase {
             }
         }
         return NOTFOUND;
-    }
-
-    /**
-    Public Find, searches a member in the list
-    Calls the private function find
-    @param member the member to find
-    @return the index i of the member or NOTFOUND(-1) if the member is not in the list
-    */
-    public int PublicFind(Member member) {
-        return find(member);
     }
 
     /**
@@ -139,7 +115,6 @@ public class MemberDatabase {
     Prints the array contents as is
     */
     public void print () {
-        System.out.println("\n-list of members-");
         for(int i =0; i<size; i++){
             if(mlist[i] != null){
                 System.out.println(mlist[i].getFname() + " "
@@ -152,9 +127,32 @@ public class MemberDatabase {
                         + ", " + mlist[i].getLocation().getCounty().toUpperCase());
             }
         }
-        System.out.println("-end of list-\n");
     }
 
+    /**
+     * Prints the array with membership fees
+     */
+    public void printMemberShip(){
+        System.out.println("\n-list of members with membership fees-");
+        for(int i =0; i<size; i++){
+            if(mlist[i] != null){
+                System.out.println(mlist[i].getFname() + " "
+                        + mlist[i].getLname() + ", "
+                        + "DOB: " + mlist[i].getDob().print(mlist[i].getDob())
+                        + ", " + "Membership expires "
+                        + mlist[i].getExpire().print(mlist[i].getExpire())
+                        + "," + " Location: " + mlist[i].getLocation()
+                        + ", " + mlist[i].getLocation().getZipcode()
+                        + ", " + mlist[i].getLocation().getCounty().toUpperCase()
+                        + (mlist[i].whoAmI().equals("Family.")? (", (Family) Guess-pass remaining: "
+                        + ((Family)mlist[i]).getGUEST_PASS() + ", "): ", ")
+                        + (mlist[i].whoAmI().equals("Premium.")? ("(Premium) Guess-pass remaining: "
+                        + ((Premium)mlist[i]).getGUEST_PASS() + ", ") : "")
+                        + "Membership fee: $" + mlist[i].membershipFee());
+            }
+        }
+        System.out.println("-end of list-\n");
+    }
     /**
     Prints the array sorted by county and then zipcode
     */
@@ -172,18 +170,7 @@ public class MemberDatabase {
             }
         }
         System.out.println("\n-list of members sorted by county and zipcode-");
-        for (int i = 0; i < size; i++) {
-            if(mlist[i] != null){
-                System.out.println(mlist[i].getFname() + " "
-                        + mlist[i].getLname() + ", " +  "DOB: "
-                        + mlist[i].getDob().print(mlist[i].getDob()) + ", "
-                        + "Membership expires "
-                        + mlist[i].getExpire().print(mlist[i].getExpire())
-                        + "," + " Location: " + mlist[i].getLocation()
-                        + ", " + mlist[i].getLocation().getZipcode()
-                        + ", " + mlist[i].getLocation().getCounty().toUpperCase());
-            }
-        }
+        print();
         System.out.println("-end of list-" + "\n");
     }
 
@@ -207,18 +194,7 @@ public class MemberDatabase {
             }
         }
         System.out.println("\n-list of members sorted by membership expiration date-");
-        for (int i = 0; i < size; i++) {
-            if(mlist[i] != null){
-                System.out.println(mlist[i].getFname() + " "
-                        + mlist[i].getLname() + ", "
-                        + "DOB: " + mlist[i].getDob().print(mlist[i].getDob())
-                        + ", " + "Membership expires "
-                        + mlist[i].getExpire().print(mlist[i].getExpire()) + ","
-                        + " Location: " + mlist[i].getLocation()
-                        + ", " + mlist[i].getLocation().getZipcode()
-                        + ", " + mlist[i].getLocation().getCounty().toUpperCase());
-            }
-        }
+        print();
         System.out.println("-end of list-\n");
     }
 
@@ -239,18 +215,7 @@ public class MemberDatabase {
             }
         }
         System.out.println("\n-list of members sorted by last name, and first name-");
-        for (int i = 0; i < size; i++) {
-            if(mlist[i] != null){
-                System.out.println(mlist[i].getFname() + " "
-                        + mlist[i].getLname() + ", " +  "DOB: "
-                        + mlist[i].getDob().print(mlist[i].getDob())
-                        + ", " + "Membership expires "
-                        + mlist[i].getExpire().print(mlist[i].getExpire())
-                        + "," + " Location: " + mlist[i].getLocation()
-                        + ", " + mlist[i].getLocation().getZipcode()
-                        + ", " + mlist[i].getLocation().getCounty().toUpperCase());
-            }
-        }
+        print();
         System.out.println("-end of list-" + "\n");
     }
 

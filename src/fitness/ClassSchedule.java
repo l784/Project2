@@ -1,54 +1,33 @@
 package fitness;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 import java.io.File;
 import java.util.StringTokenizer;
 
+/**
+ * Class Schedule holds the Fitness Array consisting of all the classes from the classSchedule
+ * and also the participants and guests who checked in
+ */
 public class ClassSchedule {
+
     private FitnessClass [] classes;
     private int numClasses;
 
+    /**
+     * Initializes the instances in Class Schedule
+     */
     public ClassSchedule(){
         this.classes = null;
         this.numClasses = 0;
     }
-    public int getNumClasses(){
-        return numClasses;
-    }
 
+    /**
+     * Getter for the fitnessClass Array
+     * @return the Fitness Class
+     */
     public FitnessClass [] getClasses(){
         return classes;
     }
-
-
-    /**
-     Public Find, searches a member in the list
-     Calls the private function find
-     @param member the member to find
-     @return the index i of the member or NOTFOUND(-1) if the member is not in the list
-    public int PublicFind(FitnessClass ) {
-        for(int i = 0; i < size; i++){
-            if(member.equals(mlist[i])){
-                return i;
-            }
-        }
-        return NOTFOUND;
-    }
-     */
-
-    /**
-     Public Find, searches a member in the list
-     Calls the private function find
-     @param member the member to find
-     @return the member at index i or null if the NOTFOUND
-    public Member PublicFindMember(Member member) {
-        int index = find(member);
-        if( index == NOTFOUND ){
-            return null;
-        }
-        return mlist[index];
-    }
-     */
 
     /**
      Checks if class exists at the Gym
@@ -81,8 +60,6 @@ public class ClassSchedule {
         }
         return temp;
     }
-
-
 
     /**
      Grow, a growable container with an initial capacity of 4
@@ -125,31 +102,29 @@ public class ClassSchedule {
         return false;
     }
 
-
-
     /**
-     Prints the schedule of all fitness classes
+     * Print the schedule of the classes
      */
     public void printSchedule(){
         if(classes == null){
             System.out.println("Fitness class schedule is empty.\n");
         }
-        else{
-            //System .out.println("\n-Fitness class-");
-            System .out.println("\n-Fitness classes loaded-");
+        else {
             for(int i =0; i< numClasses; i++){
                 if(classes[i]!=null){
                     System.out.println(classes[i]);
-                    //System.out.println(classes[i]);
                 }
             }
-            System .out.println("-end of class list.\n");
         }
-
     }
 
-    public static void main (String [] args) throws FileNotFoundException {
-        Scanner inFile = new Scanner( new File("/Users/tanvi/Desktop/IntelliJ/Project1.1/src/fitness/classSchedule.txt"));
+    /**
+     * Main to test this method
+     * @param args
+     * @throws IOException
+     */
+    public static void main (String [] args) throws IOException {
+        Scanner inFile = new Scanner( new File("classSchedule.txt"));
         String command;
         StringTokenizer st;
         String [] temp;
@@ -157,12 +132,7 @@ public class ClassSchedule {
         while(inFile.hasNext()){
             command = inFile.nextLine();
             st = new StringTokenizer(command);
-            //temp = createString(st);
-            //FitnessClass newFit = createFitnessClass(temp);
-            //check.add(newFit);
-            // System.out.println(newFit);
         }
-        //check.printSchedule();
         Premium t = new Premium("Tanvi", "Thigle",new Date("3/16/2002"), new Date("12/28/2027"),Location.FRANKLIN);
         Member a = new Member("Neeraj", "Pise",new Date("8/31/1999"), new Date("12/28/2023"),Location.BRIDGEWATER);
 

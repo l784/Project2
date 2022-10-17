@@ -1,14 +1,12 @@
 package fitness;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.StringTokenizer;
-//import classSchedule.txt;
 
 /**
 Gym Manager, is a User Interface Class to process the command line
-Can process a single or batch of command lines
+Can process a single or batch of command lines or txt files
 @author Leah Ranavat, Tanvi Thigle
 */
 public class GymManager {
@@ -16,11 +14,6 @@ public class GymManager {
     private static final MemberDatabase MLIST_DATA = new MemberDatabase();
     private static final Date DATE_CALL = new Date();
     private static final ClassSchedule FITNESS_CLASS_DATA = new ClassSchedule();
-    public int count = 0;
-    //private static final ArrayList PARTICIPANTS =
-    //private static FitnessClass  newFitness = new FitnessClass(null, null,null,null);
-    //private static final FitnessClass FITNESS_CALL = new FitnessClass();
-
 
     /**
     Checks if the command is valid
@@ -49,7 +42,6 @@ public class GymManager {
             System.out.println("DOB" + " " + DATE_CALL.print(dob) + ": must be 18 or older to join!");
             return false;
         }
-        //System.out.println("DOB" + " " + DATE_CALL.print(newMember.getDob()) + ": must be 18 or older to join!");
         return true;
     }
 
@@ -99,6 +91,7 @@ public class GymManager {
 
     /**
     Checks the size of MLIST_DATA
+     @return boolean true if database is empty and false otherwise
     */
     private boolean checkSize(){
         if(MLIST_DATA.getSize() == 0){
@@ -114,15 +107,13 @@ public class GymManager {
     @return the String Array with the tokens
     */
     private String [] createString (StringTokenizer st){
-        String[] temp = new String[5];
+        String[] temp = new String[6];
         for(int i = 0; st.hasMoreTokens(); i++){
             temp[i]= st.nextToken();
         }
-        /*Location temploc = Location.EDISON;
-        if(temploc.isValid(temp[3]) == true){
-        }*/
         return temp;
     }
+
 
     /**
      Creates the Member, Date and Location Object to be added to the Array
@@ -142,10 +133,15 @@ public class GymManager {
             return tempMember;
         }
         Date expiretemp = new Date(temp[3]);
-        //System.out.println(expiretemp.print(expiretemp));
         Member tempMember = new Member(temp[0], temp[1], dobtemp,expiretemp , Location.valueOf(temp[4].toUpperCase()));
         return tempMember;
     }
+
+    /**
+     Creates the Family, Date and Location Object to be added to the Array
+     @param temp the createString above with the member information
+     @return the Family created
+     */
     private Family createFamily(String [] temp){
         Date dobtemp =  new Date(temp[2]);
         if(temp[3] == null && temp[4] == null) {
@@ -159,11 +155,15 @@ public class GymManager {
             return tempMember;
         }
         Date expiretemp = new Date(temp[3]);
-        //System.out.println(expiretemp.print(expiretemp));
         Family tempMember = new Family(temp[0], temp[1], dobtemp,expiretemp , Location.valueOf(temp[4].toUpperCase()));
         return tempMember;
     }
 
+    /**
+     Creates the Premium, Date and Location Object to be added to the Array
+     @param temp the createString above with the member information
+     @return the Premium created
+     */
     private Premium createPremium(String [] temp){
         Date dobtemp =  new Date(temp[2]);
         if(temp[3] == null && temp[4] == null) {
@@ -177,7 +177,6 @@ public class GymManager {
             return tempMember;
         }
         Date expiretemp = new Date(temp[3]);
-        //System.out.println(expiretemp.print(expiretemp));
         Premium tempMember = new Premium(temp[0], temp[1], dobtemp,expiretemp , Location.valueOf(temp[4].toUpperCase()));
         return tempMember;
     }
@@ -187,22 +186,27 @@ public class GymManager {
     Checks if date of birth is Valid or person not in array
     @param st the tokens that have the member information
     */
-    private void commandA(StringTokenizer st){
+    private void commandA(StringTokenizer st,String command){
         String [] createString = createString(st);
-        //System.out.println(createString[4]);
-        Location temploc = Location.EDISON;
-        if(temploc.isValid(createString[3]) == false){
+        if(Location.EDISON.isValid(createString[3]) == false){
             System.out.println(createString[3] + ": invalid location!");
         }
         else {
+            Member newMember = new Member(null,null,null,null,null);
             createString[4] = createString[3];
             createString[3] = null;
-            Member newMember = createMember(createString);
+            if(command.equals("AF")){
+                 newMember = createFamily(createString);
+            }
+            else if(command.equals("AP")){
+                newMember = createPremium(createString);
+            }
+            else {
+                newMember = createMember(createString);
+            }
             if(checkCalenderDobExp(newMember) == false);
             else if (checkTodFut(newMember.getDob()) == false);
             else if(checkAge(newMember.getDob()) == false);
-
-
             else if(MLIST_DATA.add(newMember) == true){
                 System.out.println (newMember.getFname() + " " + newMember.getLname() + " " + "added");
             }
@@ -210,53 +214,6 @@ public class GymManager {
                 System.out.println(newMember.getFname() + " " + newMember.getLname() + " is already in the database.");
             }
         }
-    }
-
-    public void commandAF(StringTokenizer st){
-        String [] createString = createString(st);
-        Location temploc = Location.EDISON;
-        if(temploc.isValid(createString[3]) == false){
-            System.out.println(createString[3] + ": invalid location!");
-        }
-        else{
-            createString[4] = createString[3];
-            createString[3] = null;
-            Family newFamily = createFamily(createString);
-            if(checkCalenderDobExp(newFamily) == false);
-            else if (checkTodFut(newFamily.getDob()) == false);
-            else if(checkAge(newFamily.getDob()) == false);
-            else if(MLIST_DATA.add(newFamily) == true){
-                System.out.println (newFamily.getFname() + " " + newFamily.getLname() + " " + "added");
-            }
-            else if(MLIST_DATA.add(newFamily) == false){
-                System.out.println(newFamily.getFname() + " " + newFamily.getLname() + " is already in the database.");
-            }
-        }
-    }
-
-    public void commandAP(StringTokenizer st){
-        String [] createString = createString(st);
-        Location temploc = Location.EDISON;
-        if(temploc.isValid(createString[3]) == false){
-            System.out.println(createString[3] + ": invalid location!");
-        }
-        else{
-            createString[4] = createString[3];
-            createString[3] = null;
-            Premium newPremium = createPremium(createString);
-            if(checkCalenderDobExp(newPremium) == false);
-            else if (checkTodFut(newPremium.getDob()) == false);
-            else if(checkAge(newPremium.getDob()) == false);
-
-
-            else if(MLIST_DATA.add(newPremium) == true){
-                System.out.println (newPremium.getFname() + " " + newPremium.getLname() + " " + "added");
-            }
-            else if(MLIST_DATA.add(newPremium) == false){
-                System.out.println(newPremium.getFname() + " " + newPremium.getLname() + " is already in the database.");
-            }
-        }
-
     }
 
     /**
@@ -277,97 +234,49 @@ public class GymManager {
     }
 
     /**
-     Interprets command for fitness class
-     @param st to separate the tokens in the input
-     @return String [] to easily access different tokens
+     * Creates Fitness Class if Member is found
+     * @param temp String with Member information
      */
-    public static String [] createFitness(StringTokenizer st){
-        //C cardio Jennifer somerville Roy Brooks 13/8/1977
-        /*
-        temp[0] = Type
-        temp[1] = Instructor
-        temp[2] = Location
-        temp[3] = fName
-        temp[4] = lname
-        temp[5] = dob
-         */
-
-        String[] temp = new String[6];
-        for(int i = 0; st.hasMoreTokens(); i++){
-            temp[i] = st.nextToken();
-        }
-        return temp;
-    }
-
-    public static FitnessClass createFitObj(String [] temp){
-        /*
-        temp[0] = Type
-        temp[1] = Instructor
-        temp[2] = Location
-        temp[3] = fName
-        temp[4] = lname
-        temp[5] = dob
-         */
-
+    public static FitnessClass findFitClass(String [] temp){
         FitnessClass newFitness = new FitnessClass(temp[0], Instructor.valueOf(temp[1].toUpperCase()) , Time.NOVALUE, Location.valueOf(temp[2].toUpperCase()));
-        //System.out.println("In addFit");
-        //System.out.println(newFitness.getParticipants().size());
         FitnessClass addData = FITNESS_CLASS_DATA.classExists(newFitness);
-        if(addData != null){
-            //newFitness = new FitnessClass(temp[0], Instructor.valueOf(temp[1].toUpperCase()), addData.getClassTime(), Location.valueOf(temp[2].toUpperCase()));
-            return addData;
-        }
         return addData;
     }
 
     /**
-     * Creates member for Fitness class
-     *
+     * Creates Fitness Class if Member is found
      * @param temp String from above with Member information
      * @return Member to create a list of participants
      */
-
-    public static Member addFitMember(String [] temp){
-        //C cardio Jennifer somerville Roy Brooks 13/8/1977
-        /*
-        temp[0] = Type
-        temp[1] = Instructor
-        temp[2] = Location
-        temp[3] = fName
-        temp[4] = lname
-        temp[5] = dob
-         */
-        //public FitnessClass(String type, Instructor ins, Time time,Location loc){
-
+    public static Member addFindMember(String [] temp){
         Member fitnessMember = new Member(temp[3],temp[4], new Date(temp[5]),new Date("12/12/2028"),Location.NOVALUE);
-        //System.out.println("IN the addFit Member class" + fitnessMember.whoAmI());
-        //Do checks for date of birth and for expiration data!!!
         Member addData = MLIST_DATA.PublicFindMember(fitnessMember);
         if(addData != null) {
-            //System.out.println("IN the addFit Member class" + addData.whoAmI());
             if(addData.whoAmI().equals("Family.")){
                 return addData;
-                //fitnessMember = new Family(temp[3],temp[4], new Date(temp[5]), addData.getExpire(), addData.getLocation());
             }
             else if(addData.whoAmI().equals("Premium.")){
                 return addData;
-                //fitnessMember = new Premium(temp[3],temp[4], new Date(temp[5]), addData.getExpire(), addData.getLocation());
             }
             else {
                 fitnessMember = new Member(temp[3],temp[4], new Date(temp[5]), addData.getExpire(), addData.getLocation());
             }
-            //System.out.println(addData.whoAmI());
         }
         return fitnessMember;
     }
 
+    /**
+     Checks if classType is valid
+     @param fitnessClass to check with existing classes
+     @return boolean false if class does not exist true otherwise
+     */
     public boolean classType(String fitnessClass){
         for(int i = 0; i < FITNESS_CLASS_DATA.getClasses().length; i++){
             if(FITNESS_CLASS_DATA.getClasses()[i] != null){
                 if( !(fitnessClass.equalsIgnoreCase("Spinning") ||
                         fitnessClass.equalsIgnoreCase("Cardio") ||
-                        fitnessClass.equalsIgnoreCase("Pilates")) ){
-                    System.out.println(fitnessClass + " does not exist.");
+                        fitnessClass.equalsIgnoreCase("Pilates")) ) {
+                    System.out.println(fitnessClass + " - class does not exist.");
                     return false;
                 }
             }
@@ -380,7 +289,7 @@ public class GymManager {
      @param member to check with existing classes
      @return int true if class does not exist, index value if it does
      */
-    public int memberTimeConflictGym(Member member, FitnessClass fitnessClass){ // in class schedule?
+    public int memberTimeConflictGym(Member member, FitnessClass fitnessClass){
         FitnessClass[] x =  FITNESS_CLASS_DATA.timeConflict(fitnessClass.TimeConflict());
         for(int i =0; i< x.length; i++){
             if(x[i]!=null){
@@ -390,7 +299,6 @@ public class GymManager {
                     }
                 }
             }
-
         }
         return -1;
     }
@@ -401,21 +309,20 @@ public class GymManager {
      @param st the tokens that have the member information
      */
     private void commandC(StringTokenizer st){
-        String [] stAsStr = createFitness(st);
+        String [] stAsStr = createString(st);
         Instructor instrloc = Instructor.DENISE;
         Location temploc = Location.EDISON;
         if(instrloc.isValid(stAsStr[1]) == false){
-            System.out.println(stAsStr[1] + " — instructor does not exist");
+            System.out.println(stAsStr[1] + " — instructor does not exist.");
         }
         else if(temploc.isValid(stAsStr[2]) == false){
-            System.out.println(stAsStr[2] + ": invalid Location!");
+            System.out.println(stAsStr[2] + " - invalid location.");
         }
         else if(classType(stAsStr[0]) == false);
         else {
-            FitnessClass newFitness = createFitObj(stAsStr);
-            Member newMember = addFitMember(stAsStr);
-            //System.out.println(newMember.whoAmI());
-            if(createFitObj(stAsStr) == null){
+            FitnessClass newFitness = findFitClass(stAsStr);
+            Member newMember = addFindMember(stAsStr);
+            if(findFitClass(stAsStr) == null){
                 System.out.println( stAsStr[0] + " by " + stAsStr[1] + " does not exist at " + stAsStr[2]);
             }
             else if( newMember.whoAmI().equals("Member.") && newMember.getLocation().equals(newFitness.getClassLocation()) == false && !(newMember.getLocation().equals(Location.NOVALUE)) ){
@@ -426,22 +333,22 @@ public class GymManager {
             else if(checkCalenderDobExp(newMember) == false);
             else if(checkExp(newMember) == false);
             else if(newFitness.alreadyCheckedIn(newMember) == true){
-                System.out.println(newMember.getFname() + " " + newMember.getLname() + " has already checked in " + newFitness.getClassType() + ".");
+                System.out.println(newMember.getFname() + " " + newMember.getLname() + " already checked in.");
             }
             else if(memberTimeConflictGym(newMember,newFitness) > -1){
-                //Time conflict - SPINNING - EMMA, 9:30, FRANKLIN, 08873, SOMERSET
-                System.out.println("Time conflict - " + stAsStr[0] + " — " + stAsStr[1] + "," + newFitness.getClassTime() + ",");
+                System.out.println( "Time conflict - " + stAsStr[0].toUpperCase() + " — " + stAsStr[1] + ", "
+                        + newFitness.getClassTime().getHour() + ", " + newFitness.getClassLocation()
+                        + ", " + newFitness.getClassLocation().getZipcode()
+                        + ", " + newFitness.getClassLocation().getCounty() );
             }
             else if( newFitness.checkIn(newMember) == true ){
-                    System.out.println(newMember.getFname() + " " + newMember.getLname() + " checked in " + newFitness.getClassType());
-                    System.out.println(newFitness);
+                    System.out.print(newMember.getFname() + " " + newMember.getLname() + " checked in ");
+                    System.out.println(newFitness + "\n");
             }
             else {
                 System.out.println(newMember.getFname() + " " + newMember.getLname() + " " + DATE_CALL.print(newMember.getDob()) + " is not in the database.");
             }
-
         }
-
     }
 
 
@@ -450,24 +357,23 @@ public class GymManager {
      Checks if fitness Class exists
      @param st the tokens that have the member information
      */
-
     private void commandD(StringTokenizer st){
-        String [] stAsStr = createFitness(st);
-        Instructor instrloc = Instructor.DENISE;
-        Location temploc = Location.EDISON;
-        if(instrloc.isValid(stAsStr[1]) == false){
+        String [] stAsStr = createString(st);
+        if(Instructor.DENISE.isValid(stAsStr[1]) == false){
             System.out.println(stAsStr[1] + " — instructor does not exist");
         }
-        else if(temploc.isValid(stAsStr[2]) == false){
+        else if(Location.EDISON.isValid(stAsStr[2]) == false){
             System.out.println(stAsStr[2] + ": invalid Location!");
         }
         else if(classType(stAsStr[0]) == false);
         else {
-            FitnessClass newFitness = createFitObj(stAsStr);
-            Member newMember = addFitMember(stAsStr);
-            //System.out.println(newMember.whoAmI());
-            if ( createFitObj(stAsStr) == null ) {
+            FitnessClass newFitness = findFitClass(stAsStr);
+            Member newMember = addFindMember(stAsStr);
+            if ( findFitClass(stAsStr) == null ) {
                 System.out.println(stAsStr[0] + " by " + stAsStr[1] + " does not exist at " + stAsStr[2]);
+            }
+            else if(MLIST_DATA.PublicFindMember(newMember) == null){
+                System.out.println(newMember.getFname() + " " + newMember.getLname() + " " + DATE_CALL.print(newMember.getDob()) + " is not in the database.");
             }
             else if(checkCalenderDobExp(newMember) == false);
             else if(checkExp(newMember) == false);
@@ -475,50 +381,50 @@ public class GymManager {
                 System.out.println(newMember.getFname() + " " + newMember.getLname() + " did not check in");
             }
             else if( newFitness.doneClass(newMember) ){
-                System.out.println(newMember.getFname() + " " + newMember.getLname() + " done with this class");
-            }
-            else {
-                System.out.println(newMember.getFname() + " " + newMember.getLname() + " " + DATE_CALL.print(newMember.getDob()) + " is not in the database.");
+                System.out.println(newMember.getFname() + " " + newMember.getLname() + " done with the class");
             }
         }
     }
 
+    /**
+     Adds a person to the Guest ArrayList
+     Checks membership restrictions and guest passes
+     @param st the tokens that have the member information
+     */
     private void commandCG(StringTokenizer st){
-        //System.out.println(count++);
-        String [] stAsStr = createFitness(st);
-        FitnessClass newFitness = createFitObj(stAsStr);
-        Member newMember = addFitMember(stAsStr);
-        //System.out.println(newFitness.getClassLocation() + " " + newMember.getLocation());
+        String [] stAsStr = createString(st);
+        FitnessClass newFitness = findFitClass(stAsStr);
+        Member newMember = addFindMember(stAsStr);
         if(newMember.whoAmI().equals("Member.")){
             System.out.println("Standard membership - guest check-in is not allowed.");
         }
         else if(newMember.getLocation().equals(newFitness.getClassLocation()) == false ){
-            //Jonnathan Wei Guest checking in EDISON, 08837, MIDDLESEX - guest location restriction.
-            System.out.println("Check location");
+            System.out.println(newMember.getFname() + " " + newMember.getLname() +
+                    " checking in " + newFitness.getClassLocation() + ", "
+                    + newFitness.getClassLocation().getZipcode() + ", "
+                    + newFitness.getClassLocation().getCounty() + " - guest location restriction.");
         }
         else if( newFitness.guestCheckIn(newMember) ){
-            //if(newMember.whoAmI().)
-            //Jonnathan Wei (guest) checked in SPINNING - DENISE, 9:30, BRIDGEWATER
-            System.out.println( newMember.getFname() + " " + newMember.getLname() + " checked in " +
-                    newFitness.getClassType() + " - " + newFitness.getInstructor() + ", " +
-                    newFitness.getClassTime().getHour() + ", " + newFitness.getClassLocation());
-            System.out.println(newFitness);
+            System.out.print( newMember.getFname() + " " + newMember.getLname() + " (guest) checked in ");
+            System.out.println(newFitness + "\n");
         }
         else  {
-            System.out.println("ran out of guest pass");
+            System.out.println(newMember.getFname() + " " + newMember.getLname() + " ran out of guest pass");
         }
     }
 
+    /**
+     Deletes a guest in the Guest Array List
+     when the guest is done with class
+     @param st the tokens that has the member information
+     */
     public void commandDG(StringTokenizer st){
-        String [] stAsStr = createFitness(st);
-        System.out.println("Enters this command?");
-        FitnessClass newFitness = createFitObj(stAsStr);
-        Member newMember = addFitMember(stAsStr);
+        String [] stAsStr = createString(st);
+        FitnessClass newFitness = findFitClass(stAsStr);
+        Member newMember = addFindMember(stAsStr);
         if(newFitness.guestDoneClass(newMember) == true){
             System.out.println( newMember.getFname() + " " + newMember.getLname() + " Guest done with the class.");
         }
-        //Brown Guest done with the class.
-
     }
 
     /**
@@ -527,35 +433,77 @@ public class GymManager {
      @param command the command to be checked
      */
     private void commandP(String command){
-        if(command.equals("P")){
-            if(checkSize() == true);
-            else MLIST_DATA.print();
-        }
-        else if(command.equals("PC")){
-            if(checkSize() == true);
-            else MLIST_DATA.printByCounty();
-        }
-        else if(command.equals("PD")){
-            if(checkSize() == true);
-            else MLIST_DATA.printByExpirationDate();
-        }
-        else if(command.equals("PN")){
-            if(checkSize() == true);
-            else MLIST_DATA.printByName();
+        if(checkSize() == true);
+        else {
+            switch(command) {
+                case "P" :
+                    System.out.println("\n-list of members-");
+                    MLIST_DATA.print();
+                    System.out.println("-end of list-\n");
+                    break;
+                case "PC" :
+                    MLIST_DATA.printByCounty();
+                    break;
+                case "PD" :
+                    MLIST_DATA.printByExpirationDate();
+                    break;
+                case "PN" :
+                    MLIST_DATA.printByName();
+                    break;
+                case "PF" :
+                    MLIST_DATA.printMemberShip();
+                    break;
+            }
         }
     }
 
-    private static String [] createFit (StringTokenizer st){
-        String[] temp = new String[4];
-        for(int i = 0; st.hasMoreTokens(); i++){
-            temp[i]= st.nextToken();
+    /**
+     Loads Data in from memberList.txt
+     and prints the data once loaded
+     */
+    private void commandLM () throws IOException{
+        String commandLine;
+        String[] temp;
+        Scanner inFile = new Scanner(new File("memberList.txt"));
+        while(inFile.hasNext()){
+            commandLine = inFile.nextLine();
+            StringTokenizer st = new StringTokenizer(commandLine);
+            temp = createString(st);
+            Member createMemberTemp = createMember(temp);
+            MLIST_DATA.add(createMemberTemp);
         }
-        return temp;
+        System.out.println("\n-list of members loaded-");
+        MLIST_DATA.print();
+        System.out.println("-end of list-\n");
     }
 
+    /**
+     * Creates a new Fitness Class Object for loading data
+     * @param temp the String that holds the fitnessClass info.
+     */
     private static FitnessClass createFitnessClass(String [] temp){
         FitnessClass tempFit = new FitnessClass(temp[0].toUpperCase(), Instructor.valueOf(temp[1].toUpperCase()),Time.valueOf(temp[2].toUpperCase()) ,Location.valueOf(temp[3].toUpperCase()));
         return tempFit;
+    }
+
+    /**
+     Loads Data in from classSchedule.txt
+     and prints the data once loaded
+     */
+    private void commandLS () throws IOException{
+        String commandLine;
+        String[] temp;
+        Scanner inFile = new Scanner( new File("classSchedule.txt"));
+        while(inFile.hasNext()){
+            commandLine = inFile.nextLine();
+            StringTokenizer st = new StringTokenizer(commandLine);
+            temp = createString(st);
+            FitnessClass newFit = createFitnessClass(temp);
+            FITNESS_CLASS_DATA.add(newFit);
+        }
+        System .out.println("\n-Fitness classes loaded-");
+        FITNESS_CLASS_DATA.printSchedule();
+        System .out.println("-end of class list.\n");
     }
 
     /**
@@ -563,10 +511,6 @@ public class GymManager {
      Uses Scanner class to take in commandLine Arguments
      */
     public void run() throws IOException {
-
-        //Scanner inFile = new Scanner(new File("memberList.txt"));
-        //infile contains the reference to the file that is held here.
-        //Can call inFile. () to call the txt
         Scanner scanner = new Scanner(System.in);
         String commandLine = scanner.nextLine();
         StringTokenizer st = new StringTokenizer(commandLine);
@@ -574,66 +518,24 @@ public class GymManager {
         System.out.println("\nGym Manager running...\n");
         while(!(command.equals("Q")) ) {
             isValidCommand(command);
-            if(command.equals("A")){ //Plan to make a new private method and return one statement for each.
-                commandA(st);
+            if( command.equals("LM") ) { commandLM(); }
+            if( command.equals("LS") ){ commandLS(); }
+            if(command.equals("A") || command.equals("AF") || command.equals("AP")){
+                commandA(st,command);
             }
-            if ( command.equals("AF") ) {
-                commandAF(st);
-            }
-            if(command.equals("AP")){
-                commandAP(st);
-            }
-            if(command.equals("R")){
-                commandR(st);
-            }
-            if(command.equals("P") || command.equals("PC") || command.equals("PD") || command.equals("PN")) {
+            if(command.equals("R")) { commandR(st); }
+            if(command.equals("P") || command.equals("PC") || command.equals("PD") || command.equals("PN") || command.equals("PF")) {
                 commandP(command);
             }
-            if(command.equals("S")){
+            if( command.equals("S") ) {
+                System .out.println("\n-Fitness classes-");
                 FITNESS_CLASS_DATA.printSchedule();
+                System .out.println("-end of class list.\n");
             }
-            if(command.equals("C")){
-                commandC(st);
-            }
-            if(command.equals("D")){
-                commandD(st);
-            }
-            if(command.equals("CG")){
-                commandCG(st);
-            }
-            if(command.equals("DG")){
-                commandDG(st);
-            }
-            if(command.equals("LM")) {
-                String[] temp;
-                Scanner inFile = new Scanner(new File("/Users/leah/Desktop/CS213/Project1.1/src/fitness/memberList.txt"));
-                while(inFile.hasNext()){
-                    //System.out.println("Goes into the while loop");
-                    commandLine = inFile.nextLine();
-                    System.out.println(commandLine);
-                    st = new StringTokenizer(commandLine);
-                    temp = createString(st);
-                    Member createMemberTemp = createMember(temp);
-                    MLIST_DATA.add(createMemberTemp);
-                }
-               //MLIST_DATA.print();
-            }
-            if(command.equals("LS")){
-                String[] temp;
-                Scanner inFile = new Scanner( new File("classSchedule.txt"));
-               //ClassSchedule check = new ClassSchedule();
-                while(inFile.hasNext()){
-                    commandLine = inFile.nextLine();
-                    st = new StringTokenizer(commandLine);
-                    temp = createFit(st);
-                    FitnessClass newFit = createFitnessClass(temp);
-                    FITNESS_CLASS_DATA.add(newFit);
-                    // System.out.println(newFit);
-                }
-                FITNESS_CLASS_DATA.printSchedule();
-            }
-            //if(command.equals("S"))
-
+            if( command.equals("C") ) { commandC(st); }
+            if( command.equals("D") ) { commandD(st); }
+            if( command.equals("CG") ) { commandCG(st); }
+            if( command.equals("DG") ) { commandDG(st); }
             if(st.hasMoreTokens() == false){
                 commandLine = scanner.nextLine();
                 while(commandLine.length() == 0){
@@ -650,114 +552,5 @@ public class GymManager {
     }
 }
 
-/*
-a
-p
-pc
-pn
-pd
-pf
-P
-PC
-PN
-PD
-PF
-AA
-r
-RR
-s
-c
-d
-cg
-dg
-ls
-lm
-SS
-CC
-DD
-S
-LS
-
-A John Doe 9/2/2022 BRIDGEWATER
-A John Doe 12/2/2022 BRIDGEWATER
-A John Doe 12/20/2004 BRIDGEWATER
-A John Doe 2/29/2003 BRIDGEWATER
-A John Doe 4/31/2003 BRIDGEWATER
-A John Doe 13/31/2003 BRIDGEWATER
-A John Doe 3/32/2003 BRIDGEWATER
-A John Doe -1/31/2003 BRIDGEWATER
-
-LM
-A John Doe 1/20/2003 BRIDGEWATER
-A john doe 1/20/2003 BRIDGEWATER
-A Jane Doe 6/1/1996 ABC
-
-PC
-PN
-PD
-
-R Paul Siegel 5/1/1999
-P
-R Paul Siegel 5/1/1999
-A Paul Siegel 6/30/1999 FRANKLIN
-PD
-
-AF Jerry Brown 6/30/2005 Edison
-AF Jerry Brown 6/30/2000 BBB
-AF Jerry Brown 6/30/1979 Edison
-AP Jonnathan Wei 9/21/2009 bridgewater
-AP Jonnathan Wei 9/21/2000 bridge
-AP Jonnathan Wei 9/21/1992 bridgewater
-PN
-
-C cardio Jennifer somerville Roy Brooks 13/8/1977
-C cardio Jennifer somerville Roy Brooks 8/8/1977
-C cardio Mary somerville Roy Brooks 8/8/1977
-C cardio Jennifer somerville Happy Brooks 8/8/1977
-C Pilates Jennifer Bridgewater Mary Lindsey 12/1/1989
-C Pilates Kim Franklin Mary Lindsey 12/1/1989
-C Pilates Kim Franklin Mary Lindsey 12/1/1989
-C Spinning Emma Franklin Mary Lindsey 12/1/1989
-C abc Emma Edison Jane Doe 5/1/1996
-C pilates Emma Morristown Jane Doe 5/1/1996
-C pilates Amy Edison Jane Doe 5/1/1996
-C pilates Emma Edison Jane Doe 13/1/1996
-C Spinning Davis Edison Jane Doe 5/1/1996
-C pilates Emma Edison Jane Doe 5/1/1996
-C Pilates Kim Franklin Paul Siegel 6/30/1999
-C pilates Emma Edison Bill Scanlan 5/1/1999
-S
-
-C pilates Davis piscataway Jerry Brown 6/30/1979
-C pilates Davis piscataway Jerry Brown 6/30/1979
-C pilates Davis piscataway Jonnathan Wei 9/21/1992
-C cardio Davis bridgewater Jonnathan Wei 9/21/1992
-C pilates Jennifer bridgewater Jonnathan Wei 9/21/1992
-C pilates Kim Franklin Jonnathan Wei 9/21/1992
-C SPINNING KIM FRANKLIN Jerry Brown 6/30/1979
-
-S
-
-CG spinning Denise bridgewater Jane Doe 5/1/1996
-CG spinning Denise bridgewater Jonnathan Wei 9/21/1992
-CG cardio Davis bridgewater Jonnathan Wei 9/21/1992
-CG CARDIO EMMA EDISON Jonnathan Wei 9/21/1992
-CG cardio Davis bridgewater Jonnathan Wei 9/21/1992
-CG cardio Davis bridgewater Jonnathan Wei 9/21/1992
-DG cardio Davis bridgewater Jonnathan Wei 9/21/1992
-CG cardio Davis bridgewater Jonnathan Wei 9/21/1992
-CG cardio Davis bridgewater Jonnathan Wei 9/21/1992
-
-CG cardio davis bridgewater Jerry Brown 6/30/1979
-CG pilates davis Edison Jerry Brown 6/30/1979
-CG pilates davis Edison Jerry Brown 6/30/1979
-DG pilates davis Edison Jerry Brown 6/30/1979
-CG pilates davis Edison Jerry Brown 6/30/1979
-CG pilates davis Edison Jerry Brown 6/30/1979
-S
-
-Q
-This line is garbage!
- */
 
 

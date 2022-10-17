@@ -1,10 +1,8 @@
 package fitness;
-import java.util.StringTokenizer;
 import java.util.ArrayList;
 
 /**
  Fitness class provides all the instances of different classes present.
- There are three available classes each day and they have their own set times and instructors
  @author Tanvi Thigle, Leah Ranavat
  */
 public class FitnessClass {
@@ -27,13 +25,6 @@ public class FitnessClass {
         this.instructor = ins;
         this.location = loc;
         this. time = time;
-    }
-    /**
-     Gets class type
-     @return String type
-     */
-    public String getClassType(){
-        return this.type;
     }
 
     /**
@@ -60,6 +51,10 @@ public class FitnessClass {
         return this.time;
     }
 
+    /**
+     Gets the participants Array
+     @return ArrayList participants
+     */
     public ArrayList getParticipants(){
         return this.participants;
     }
@@ -87,27 +82,17 @@ public class FitnessClass {
      */
     public boolean checkIn(Member member){
         if(member.getDob().dobIsValid(member.getDob())){
-
             if(member.getExpire().expIsValid(member.getExpire())){
-                //System.out.println(member.getLocation() + " " + this.location);
                 if(member instanceof Member && member.getLocation().equals(this.location)){
-                    //System.out.println(member.getLocation() + " " + this.location);
-                    //if(alreadyCheckedIn(member) == false){
-                        //System.out.println(participants.size());
-                        //System.out.println("Are we ever reaching here ?");
+                    if(alreadyCheckedIn(member) == false){
                         return participants.add(member);
-                    //}
+                    }
                 }
-
                 else if(member instanceof Family || member instanceof Premium){
                     if(alreadyCheckedIn(member) == false){
                         return participants.add(member);
                     }
                 }
-
-
-                //put in schedule?
-
             }
         }
         return false;
@@ -135,25 +120,17 @@ public class FitnessClass {
      @return true if guest added in, false if not
      */
     public boolean addGuest(Member member){
-        System.out.println(member.whoAmI());
         int a;
         int b;
-        //System.out.println( (Family) member.);
         if(member.whoAmI().equals("Family.") && ((Family) member).GUEST_PASS > 0){
             b = ((Family) member).getGUEST_PASS();
-            System.out.println("Does it enter here");
-            System.out.println(b);
             guests.add(member);
             ((Family) member).setGUEST_PASS(b-1);
-            System.out.println(b);
             return true;
         }
         else if (member.whoAmI().equals("Premium.") && ((Premium) member).GUEST_PASS > 0){
             a = ((Premium) member).getGUEST_PASS();
-            System.out.println("Does it enter here");
-            System.out.println(a);
             guests.add(member);
-            System.out.println(a);
             ((Premium) member).setGUEST_PASS(a-1);
             return true;
         }
@@ -168,22 +145,20 @@ public class FitnessClass {
      */
     public boolean alreadyCheckedIn(Member member){
         for(int i = 0; i < participants.size(); i++){
-
-            //System.out.println(participants.get(i));
-
             if(participants.get(i)!= null) {
-                //System.out.println("Goes in here!!");
-
                 if (participants.get(i).equals(member)) {
-                    //System.out.println(participants.get(i));
                     return true;
                 }
             }
         }
-
         return false;
     }
 
+
+    /**
+     Helper method to TimeConflict in ClassSchedule
+     @return Fitness Class
+     */
     public FitnessClass TimeConflict(){
         return this;
     }
@@ -194,16 +169,14 @@ public class FitnessClass {
      @param member the member to be dropped
      @return true if drop is successful, false if not.
      */
-    public boolean doneClass(Member member){ //exists in fit_class array then remove
+    public boolean doneClass(Member member){
         if(alreadyCheckedIn(member)){
-
             for(int i =0; i <participants.size() ; i++){
                 if(member.equals(participants.get(i))){
                     participants.remove(i);
                     return true;
                 }
             }
-
         }
         return false;
     }
@@ -231,8 +204,6 @@ public class FitnessClass {
         return false;
     }
 
-
-
     /**
      Prints all the information of the member
      @return String member
@@ -240,19 +211,28 @@ public class FitnessClass {
     @Override
     public String toString(){
         String std = type + " - " + instructor + ", " + time.getHour() + ", " + location;
-        String p = "\n Participants ";
-        String g = "\n Guests ";
-        //System.out.println("Participants");
+        String p = "\n - Participants - ";
+        String g = "\n - Guests - ";
         for(int i=0; i< participants.size(); i++){
             if(participants.get(i)!= null){
-                p += "\n" + participants.get(i);
-
+                p += "\n" + "\t" + participants.get(i).getFname() + " " + participants.get(i).getLname()
+                + ", DOB: " + participants.get(i).getDob().print(participants.get(i).getDob())
+                + ", Membership expires " + participants.get(i).getExpire().print(participants.get(i).getExpire())
+                + ", Location: " + participants.get(i).getLocation() + ", " + participants.get(i).getLocation().getZipcode()
+                + ", " + participants.get(i).getLocation().getCounty();
             }
         }
         for(int i=0; i< guests.size(); i++){
             if(guests.get(i)!= null){
-                g += "\n" + guests.get(i);
-
+                g += "\n" + "\t" + guests.get(i).getFname() + " " + guests.get(i).getLname()
+                + ", DOB: " + guests.get(i).getDob().print(guests.get(i).getDob())
+                + ", Membership expires " + guests.get(i).getExpire().print(guests.get(i).getExpire())
+                + ", Location: " + guests.get(i).getLocation() + ", " + guests.get(i).getLocation().getZipcode()
+                + ", " + guests.get(i).getLocation().getCounty()
+                + (guests.get(i).whoAmI().equals("Family.")? (", (Family) Guess-pass remaining: "
+                        + ((Family)guests.get(i)).getGUEST_PASS() + ", "): ", ")
+                + (guests.get(i).whoAmI().equals("Premium.")? ("(Premium) Guess-pass remaining: "
+                + ((Premium)guests.get(i)).getGUEST_PASS() + ", ") : "");
             }
         }
         String res = std;
@@ -261,21 +241,7 @@ public class FitnessClass {
         if(guests.size()>0)
             res += g;
         return res;
-
     }
 
-    /*FitnessClass x = new FitnessClass(Pilates, KIM, MORNING, FRANKLIN);
-    FitnessClass y = new FitnessClass(Pilates, KIM, MORNING, FRANKLIN);
 
-    x.getTime()
-    y.getTime()
-
-    participantsX = x.getParticipants()
-    participantsY = y
-
-    for i in x.getParticipants{
-        if is in y.getParticipants {
-
-        }
-    }*/
 }

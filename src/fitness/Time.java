@@ -13,31 +13,21 @@ public enum Time {
     NOVALUE("O");
 
     private final String hour;
-    //private final int minute;
 
     /**
      Constructor used to set time
-     @param hour, minute that it needs to be set to
+     @param hour, that it needs to be set to
      */
     Time(String hour){
         this.hour = hour;
-        // this.minute = minute;
     }
 
     /**
      Gets the value for hour
-     @return int hour to access the private instance variable
+     @return String hour to access the private instance variable
      */
     public String getHour(){
         return hour;
     }
-
-    /**
-     Gets the value for minute
-     @return int minute to access the private instance variable
-     */
-    //public int getMinute(){
-    //return minute;
-    //}
 
 }
