@@ -124,7 +124,11 @@ public class MemberDatabase {
                         + mlist[i].getExpire().print(mlist[i].getExpire())
                         + "," + " Location: " + mlist[i].getLocation()
                         + ", " + mlist[i].getLocation().getZipcode()
-                        + ", " + mlist[i].getLocation().getCounty().toUpperCase());
+                        + ", " + mlist[i].getLocation().getCounty().toUpperCase()
+                        + (mlist[i].whoAmI().equals("Family.")? (", (Family) Guess-pass remaining: "
+                        + ((Family)mlist[i]).getGUEST_PASS() + ", "): "")
+                        + (mlist[i].whoAmI().equals("Premium.")? ("(Premium) Guess-pass remaining: "
+                        + ((Premium)mlist[i]).getGUEST_PASS() + ", ") : "") ) ;
             }
         }
     }
